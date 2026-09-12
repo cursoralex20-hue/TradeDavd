@@ -229,7 +229,7 @@ private fun hostOf(baseUrl: String): String {
 }
 
 private fun builtInProviderIdForHost(host: String): String? = when (host) {
-    "opencode.ai" -> OpenCodeZenKeylessProviderId
+    "opencode.ai" -> PiProviderSession.OpenCodeZenKeylessProviderId
     "api.openai.com" -> "openai"
     "api.anthropic.com" -> "anthropic"
     "generativelanguage.googleapis.com" -> "google"
