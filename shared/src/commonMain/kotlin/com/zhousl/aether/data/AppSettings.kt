@@ -138,14 +138,14 @@ data class AlpineEnvironmentVariable(
 
 @Serializable
 data class AppSettings(
-    val piProviderId: String = DefaultPiProviderId,
+    val piProviderId: String = OpenCodeZenKeylessProviderId,
     val providerConfigId: String = "",
     val providerAuthMethod: ProviderAuthMethod = ProviderAuthMethod.ApiKey,
     val apiKey: String = "",
     val oauthCredentialJson: String = "",
     val providerEnvironmentVariables: List<PiProviderEnvironmentVariable> = emptyList(),
     val baseUrl: String = DefaultCustomProviderBaseUrl,
-    val modelId: String = DefaultCustomModelId,
+    val modelId: String = PiProviderSession.OpenCodeZenFreeModels.first(),
     val userAgent: String = AetherLlmUserAgent,
     val customHeaders: List<LlmCustomHeader> = emptyList(),
     val compatibilityMode: Boolean = false,
@@ -265,7 +265,11 @@ fun normalizeLlmInactivityReconnectTimeoutSeconds(
 
 fun AppSettings.shouldLaunchOnboarding(
     onboardingVersion: Int = CurrentOnboardingVersion,
-): Boolean = onboardingSeenVersion < onboardingVersion
+): Boolean {
+    if (onboardingSeenVersion >= onboardingVersion) return false
+    val definition = PiProviderCatalog.resolve(piProviderId)
+    return !definition.supportsKeylessSession
+}
 
 fun AppSettings.isOnboardingComplete(
     onboardingVersion: Int = CurrentOnboardingVersion,
@@ -279,6 +283,7 @@ private fun isProviderSetupValid(
     oauthCredentialJson: String,
 ): Boolean {
     val definition = PiProviderCatalog.resolve(piProviderId)
+    if (definition.supportsKeylessSession) return true
     if ((definition.requiresBaseUrl || !definition.isBuiltIn) && baseUrl.trim().isEmpty()) return false
     return when (authMethod) {
         ProviderAuthMethod.ApiKey ->

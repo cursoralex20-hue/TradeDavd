@@ -6,11 +6,20 @@ import org.junit.Test
 
 class OnboardingLogicTest {
     @Test
-    fun freshInstallLaunchesOnboarding() {
+    fun freshInstallWithKeylessProviderSkipsOnboarding() {
         val settings = AppSettings()
 
-        assertTrue(settings.shouldLaunchOnboarding())
+        assertFalse(settings.shouldLaunchOnboarding())
         assertFalse(settings.isOnboardingComplete())
+    }
+
+    @Test
+    fun freshInstallWithNonKeylessProviderLaunchesOnboarding() {
+        val settings = AppSettings(
+            piProviderId = "openai-compatible",
+        )
+
+        assertTrue(settings.shouldLaunchOnboarding())
     }
 
     @Test
