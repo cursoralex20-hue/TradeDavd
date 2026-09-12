@@ -143,7 +143,13 @@ fun AppSettings.toPiModelConfig(
         apiKey = effectiveApiKey,
         customHeaders = keylessSessionHeader +
             customHeaders.toPiHeaderMap() +
-            ("User-Agent" to normalizeLlmUserAgent(userAgent)),
+            (
+                "User-Agent" to if (keylessSessionHeader.isNotEmpty()) {
+                    PiProviderSession.OpenCodeZenKeylessUserAgent
+                } else {
+                    normalizeLlmUserAgent(userAgent)
+                }
+                ),
         compatibilityMode = !definition.isBuiltIn && compatibilityMode,
         developerRoleUnsupported = developerRoleUnsupported,
         reasoning = reasoningEnabled,

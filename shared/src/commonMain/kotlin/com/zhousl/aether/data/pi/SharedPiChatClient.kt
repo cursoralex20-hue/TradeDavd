@@ -499,7 +499,11 @@ fun LlmProviderConfig.toSharedPiModelConfig(
             customHeaders.forEach { header ->
                 header.name.trim().takeIf(String::isNotBlank)?.let { put(it, header.value) }
             }
-            put("User-Agent", normalizeLlmUserAgent(userAgent))
+            put("User-Agent", if (keylessSessionHeaders.isNotEmpty()) {
+                PiProviderSession.OpenCodeZenKeylessUserAgent
+            } else {
+                normalizeLlmUserAgent(userAgent)
+            })
         })
         if (!definition.isBuiltIn && compatibilityMode) put("compatibility_mode", true)
         if (developerRoleUnsupported) put("supports_developer_role", false)

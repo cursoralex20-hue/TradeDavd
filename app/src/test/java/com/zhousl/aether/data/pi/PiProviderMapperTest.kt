@@ -309,6 +309,10 @@ class PiProviderMapperTest {
         val session = headers["x-opencode-session"]
         assertFalse(session.isNullOrBlank())
         assertEquals(session, headers["authorization"])
+        assertEquals(
+            com.zhousl.aether.data.PiProviderSession.OpenCodeZenKeylessUserAgent,
+            headers["User-Agent"],
+        )
     }
 
     @Test
@@ -322,5 +326,6 @@ class PiProviderMapperTest {
         assertEquals("sk-real-key", config.apiKey)
         assertFalse(config.customHeaders.containsKey("x-opencode-session"))
         assertFalse(config.customHeaders.containsKey("authorization"))
+        assertEquals(AetherLlmUserAgent, config.customHeaders["User-Agent"])
     }
 }

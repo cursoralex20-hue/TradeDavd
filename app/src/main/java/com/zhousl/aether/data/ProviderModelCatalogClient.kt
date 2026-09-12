@@ -212,6 +212,12 @@ object ProviderModelCatalogClient {
         }
         connection.setRequestProperty("Content-Type", "application/json")
         connection.applyAetherLlmHeaders(config.userAgent, config.customHeaders)
+        if (keylessSession) {
+            connection.setRequestProperty(
+                "User-Agent",
+                PiProviderSession.OpenCodeZenKeylessUserAgent,
+            )
+        }
         connection.connectTimeout = 15_000
         connection.readTimeout = 30_000
 

@@ -231,7 +231,14 @@ class SharedProviderModelCatalogClient(engine: HttpClientEngine? = null) {
             val response = client.get(modelsUrl) {
                 headers {
                     append(HttpHeaders.ContentType, "application/json")
-                    append(HttpHeaders.UserAgent, normalizeLlmUserAgent(config.userAgent))
+                    append(
+                        HttpHeaders.UserAgent,
+                        if (keylessSession) {
+                            PiProviderSession.OpenCodeZenKeylessUserAgent
+                        } else {
+                            normalizeLlmUserAgent(config.userAgent)
+                        },
+                    )
                     if (keylessSession) {
                         append(
                             PiProviderSession.OpenCodeZenSessionHeader,

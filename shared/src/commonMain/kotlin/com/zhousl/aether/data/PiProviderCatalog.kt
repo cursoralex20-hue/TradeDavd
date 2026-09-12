@@ -46,6 +46,7 @@ object PiProviderSession {
     const val OpenCodeZenSessionHeader = "x-opencode-session"
     const val OpenCodeZenAuthHeader = "authorization"
     const val OpenCodeZenKeylessProviderId = "opencode"
+    const val OpenCodeZenKeylessUserAgent = "opencode/1.18.16"
     val OpenCodeZenFreeModels = listOf(
         "mimo-v2.5-free",
         "big-pickle",
@@ -54,7 +55,6 @@ object PiProviderSession {
         "ling-3.0-flash-fin-free",
         "muse-spark-1.3-contributor-free",
         "muse-spark-1.2-contributor-free",
-        "deepseek-v4-flash-free",
     )
 
     fun keylessSessionHeaderValue(): String = platformRandomUuid()
