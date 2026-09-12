@@ -97,6 +97,7 @@ import com.zhousl.aether.data.PiProviderEnvironmentVariable
 import com.zhousl.aether.data.ProviderAuthMethod
 import com.zhousl.aether.data.defaultAuthMethod
 import com.zhousl.aether.data.isValidProviderId
+import com.zhousl.aether.data.seededModelIds
 import com.zhousl.aether.data.normalizeLlmUserAgent
 import com.zhousl.aether.data.sanitizeProviderId
 import com.zhousl.aether.data.sortedByPreferredModelName
