@@ -144,7 +144,7 @@ data class AppSettings(
     val apiKey: String = "",
     val oauthCredentialJson: String = "",
     val providerEnvironmentVariables: List<PiProviderEnvironmentVariable> = emptyList(),
-    val baseUrl: String = DefaultCustomProviderBaseUrl,
+    val baseUrl: String = PiProviderSession.OpenCodeZenBaseUrl,
     val modelId: String = PiProviderSession.OpenCodeZenFreeModels.first(),
     val userAgent: String = AetherLlmUserAgent,
     val customHeaders: List<LlmCustomHeader> = emptyList(),
