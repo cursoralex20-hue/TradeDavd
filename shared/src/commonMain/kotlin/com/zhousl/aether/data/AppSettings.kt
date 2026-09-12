@@ -138,7 +138,7 @@ data class AlpineEnvironmentVariable(
 
 @Serializable
 data class AppSettings(
-    val piProviderId: String = OpenCodeZenKeylessProviderId,
+    val piProviderId: String = PiProviderSession.OpenCodeZenKeylessProviderId,
     val providerConfigId: String = "",
     val providerAuthMethod: ProviderAuthMethod = ProviderAuthMethod.ApiKey,
     val apiKey: String = "",
