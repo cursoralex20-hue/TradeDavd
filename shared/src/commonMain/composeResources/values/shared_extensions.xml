@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="shared_extensions_security_warning">Los paquetes de extensiones se ejecutan como código de script de confianza con amplio acceso al agente, al host de la app, al runtime local y al espacio de trabajo.</string>
+    <string name="shared_extensions_runtime_summary">%1$d paquetes · %2$d entradas de script · %3$d extensiones de interfaz TradeDAVD cargadas</string>
+    <string name="shared_extensions_runtime_enabled">Habilitadas por el runtime de scripts</string>
+    <string name="shared_extensions_script_runtime_unavailable">Las extensiones de script no están disponibles en esta plataforma.</string>
+    <string name="shared_extensions_manual_install">Instalar un paquete npm</string>
+    <string name="shared_extensions_npm_source_hint">npm:package-name</string>
+    <string name="shared_extensions_import_file">Importar JavaScript, TypeScript o zip</string>
+    <string name="shared_extensions_refresh_description">Actualizar extensiones</string>
+    <string name="shared_extensions_import_description">Importar extensión</string>
+    <string name="shared_extensions_imported">Importada</string>
+    <string name="shared_extensions_installed_path">Ruta de instalación</string>
+    <string name="shared_extensions_script_resources">%1$d extensiones de Pi · %2$d extensiones de interfaz TradeDAVD · %3$d habilidades · %4$d prompts · %5$d temas</string>
+    <string name="shared_extensions_loaded_entries">%1$d entradas cargadas</string>
+    <string name="shared_extensions_pi_entries_label">Extensiones de Pi</string>
+    <string name="shared_extensions_aether_entries_label">Extensiones de interfaz TradeDAVD</string>
+    <string name="shared_extensions_skills_label">Habilidades</string>
+    <string name="shared_extensions_prompts_label">Prompts</string>
+    <string name="shared_extensions_themes_label">Temas</string>
+    <string name="shared_extensions_loaded_entries_label">Entradas de interfaz TradeDAVD cargadas</string>
+    <string name="shared_extensions_runtime_error_count">%1$d errores de runtime de scripts</string>
+    <string name="shared_extensions_remove_title">¿Quitar la extensión?</string>
+    <string name="shared_extensions_remove_body">%1$s se quitará del runtime local. Esta acción no se puede deshacer.</string>
+    <string name="shared_extensions_invalid_import">Elige un archivo de extensión de JavaScript, TypeScript o zip.</string>
+    <string name="shared_extensions_import_too_large">La extensión seleccionada pesa más de 32 MB.</string>
+    <string name="shared_extensions_zip_unsafe">El archivo de la extensión contiene una ruta no segura.</string>
+    <string name="shared_extensions_zip_invalid">El archivo debe contener un paquete de extensión de script o un archivo index de JavaScript/TypeScript.</string>
+    <string name="shared_extensions_platform_compatibility">Este paquete parece requerir un sistema operativo de escritorio o una arquitectura de CPU que puede no estar disponible en el runtime de Alpine para iOS de TradeDAVD.</string>
+    <string name="shared_extensions_operation_in_progress">Aplicando cambios de la extensión…</string>
+    <string name="shared_extensions_refresh_complete">Extensiones actualizadas.</string>
+</resources>
