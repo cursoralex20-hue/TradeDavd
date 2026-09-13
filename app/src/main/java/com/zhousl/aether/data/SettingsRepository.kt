@@ -196,6 +196,7 @@ class SettingsRepository(
                 }
             }.getOrDefault(false)
             if (
+                parsedConfigs.isNotEmpty() &&
                 !requiresConfigMigration &&
                 prefs[PI_PROVIDER_ID]?.isNotBlank() == true &&
                 prefs[PROVIDER_AUTH_METHOD]?.isNotBlank() == true &&
@@ -239,12 +240,16 @@ class SettingsRepository(
                     apiKey = legacyApiKey,
                     baseUrl = legacyBaseUrl.ifBlank { definition.defaultBaseUrl },
                     modelId = legacyModelId.ifBlank { definition.defaultModelId },
-                    manualModelIds = listOf(
-                        legacyModelId.ifBlank { definition.defaultModelId },
-                    ).filter(String::isNotBlank),
-                    enabledModelIds = listOf(
-                        legacyModelId.ifBlank { definition.defaultModelId },
-                    ).filter(String::isNotBlank),
+                    manualModelIds = (if (definition.supportsKeylessSession) {
+                        definition.seededModelIds()
+                    } else {
+                        listOf(legacyModelId.ifBlank { definition.defaultModelId })
+                    }).filter(String::isNotBlank),
+                    enabledModelIds = (if (definition.supportsKeylessSession) {
+                        definition.seededModelIds()
+                    } else {
+                        listOf(legacyModelId.ifBlank { definition.defaultModelId })
+                    }).filter(String::isNotBlank),
                 )
                 parsedConfigs += matchingConfig
             }
