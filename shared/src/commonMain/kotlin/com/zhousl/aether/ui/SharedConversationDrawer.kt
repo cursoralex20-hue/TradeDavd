@@ -112,6 +112,7 @@ fun AetherConversationDrawer(
     onExportSession: (String) -> Unit,
     onDeleteSession: (String) -> Unit,
     onSettingsSelected: () -> Unit,
+    onTradingSelected: (() -> Unit)? = null,
     permanent: Boolean = false,
     extraContent: @Composable ((dismissSearch: () -> Unit) -> Unit) = {},
     headerContent: @Composable () -> Unit = {},
@@ -251,6 +252,19 @@ fun AetherConversationDrawer(
                                 containerColor = Color.Transparent,
                                 showHalo = false,
                             )
+                            if (onTradingSelected != null) {
+                                HeaderCircleButton(
+                                    icon = LucideIcons.ChartNoAxesColumn,
+                                    contentDescription = stringResource(Res.string.trading_title),
+                                    onClick = {
+                                        dismissSearch()
+                                        onTradingSelected()
+                                    },
+                                    size = 46.dp,
+                                    containerColor = Color.Transparent,
+                                    showHalo = false,
+                                )
+                            }
                         }
                     }
                     AnimatedVisibility(visible = searchExpanded || searchQuery.isNotBlank()) {

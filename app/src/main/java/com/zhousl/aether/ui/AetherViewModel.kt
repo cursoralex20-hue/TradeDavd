@@ -66,6 +66,8 @@ import com.zhousl.aether.data.serializeChatSessions
 import com.zhousl.aether.data.serializeProviderConfigs
 import com.zhousl.aether.data.toJson
 import com.zhousl.aether.data.toJsonArray
+import com.zhousl.aether.data.trading.Mt5SyncConfig
+import com.zhousl.aether.data.trading.Mt5SyncState
 import com.zhousl.aether.data.withExplicitDefaultChatModel
 import com.zhousl.aether.data.LlmMessage
 import com.zhousl.aether.data.LlmTextPart
@@ -105,10 +107,14 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -202,6 +208,32 @@ class AetherViewModel(
 
     val uiState: StateFlow<AetherUiState> = _uiState.asStateFlow()
     val transientMessages = _transientMessages.asSharedFlow()
+
+    val mt5JournalEntries: StateFlow<List<com.zhousl.aether.data.journal.TradeJournalEntryEntity>> =
+        runtime.tradeJournalReadStore.observeAll()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = emptyList(),
+            )
+
+    val mt5SyncConfig: StateFlow<Mt5SyncConfig> =
+        runtime.settingsRepository.mt5SyncConfigJson()
+            .map { raw ->
+                if (raw.isBlank()) {
+                    Mt5SyncConfig()
+                } else {
+                    runCatching {
+                        kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+                            .decodeFromString(Mt5SyncConfig.serializer(), raw)
+                    }.getOrDefault(Mt5SyncConfig())
+                }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = Mt5SyncConfig(),
+            )
 
     init {
         registerCoreModServices()
@@ -1634,6 +1666,14 @@ class AetherViewModel(
 
     fun openSettings() {
         _uiState.update { it.copy(currentScreen = AppScreen.Settings) }
+    }
+
+    fun openTrading() {
+        _uiState.update { it.copy(currentScreen = AppScreen.Trading) }
+    }
+
+    fun closeTrading() {
+        _uiState.update { it.copy(currentScreen = AppScreen.Chat) }
     }
 
     fun refreshUsageStatisticsSnapshots() {
@@ -5693,6 +5733,50 @@ class AetherViewModel(
                         emitTransientMessage(uiString(R.string.message_update_check_failed, throwable.userFacingMessage()))
                     }
                 }
+        }
+    }
+
+    fun saveMt5SyncConfig(config: Mt5SyncConfig) {
+        viewModelScope.launch {
+            val json = kotlinx.serialization.json.Json { ignoreUnknownKeys = true }
+                .encodeToString(Mt5SyncConfig.serializer(), config)
+            runtime.settingsRepository.saveMt5SyncConfigJson(json)
+        }
+    }
+
+    fun runMt5Sync() {
+        viewModelScope.launch {
+            val config = mt5SyncConfig.value
+            if (!config.isConfigured) {
+                emitTransientMessage(UiText.Raw("Config MT5 incompleta."))
+                return@launch
+            }
+            emitTransientMessage(UiText.Raw("Sincronizando MetaApi..."))
+            val state = runtime.mt5SyncManager.runSync(config)
+            when (state) {
+                is Mt5SyncState.Success ->
+                    emitTransientMessage(UiText.Raw("Sync OK: ${state.importedEntries} entradas importadas."))
+                is Mt5SyncState.Failure ->
+                    emitTransientMessage(UiText.Raw("Sync falló: ${state.message}"))
+                else -> emitTransientMessage(UiText.Raw("Sync sin cambios."))
+            }
+        }
+    }
+
+    fun exportTradeStateToUri(destinationUri: Uri) {
+        val json = runtime.mt5SyncManager.latestTradeStateJson()
+        if (json == null) {
+            emitTransientMessage(UiText.Raw("No hay trade_state.json todavía. Sincroniza primero."))
+            return
+        }
+        viewModelScope.launch {
+            val didExport = withContext(Dispatchers.IO) {
+                writeTextToUri(
+                    uri = destinationUri,
+                    text = json,
+                )
+            }
+            emitTransientMessage(UiText.Raw(if (didExport) "trade_state.json exportado." else "Export falló."))
         }
     }
 

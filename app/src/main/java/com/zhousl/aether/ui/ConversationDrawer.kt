@@ -188,6 +188,7 @@ fun ConversationDrawer(
     onExportSession: (ChatSession) -> Unit,
     onDeleteSession: (String) -> Unit,
     onSettingsSelected: () -> Unit,
+    onTradingSelected: () -> Unit,
 ) {
     AetherConversationDrawer(
         sessions = sessions.map { session ->
@@ -212,6 +213,7 @@ fun ConversationDrawer(
         },
         onDeleteSession = onDeleteSession,
         onSettingsSelected = onSettingsSelected,
+        onTradingSelected = onTradingSelected,
         headerContent = {
             AetherExtensionSlot(AetherExtensionSlotDrawerHeader)
         },

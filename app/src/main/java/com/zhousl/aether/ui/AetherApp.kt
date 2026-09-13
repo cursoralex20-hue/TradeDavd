@@ -173,7 +173,8 @@ private const val PrivacyPolicyAnnotationTag = "privacy_policy"
 private fun AppScreen.depth(): Int = when (this) {
     AppScreen.Onboarding -> 0
     AppScreen.Chat -> 1
-    AppScreen.Settings -> 2
+    AppScreen.Trading -> 2
+    AppScreen.Settings -> 3
 }
 
 private fun AetherUiState.toAetherExtensionContext(): JSONObject {
@@ -663,6 +664,14 @@ private fun AetherAppContent(
             }
         },
     )
+    val tradeStateExportLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("application/json"),
+        onResult = { destinationUri ->
+            if (destinationUri != null) {
+                viewModel.exportTradeStateToUri(destinationUri)
+            }
+        },
+    )
     val appDataImportLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.OpenDocument(),
         onResult = { sourceUri ->
@@ -812,6 +821,12 @@ private fun AetherAppContent(
                     scope.launch {
                         drawerState.close()
                         viewModel.openSettings()
+                    }
+                },
+                onTradingSelected = {
+                    scope.launch {
+                        drawerState.close()
+                        viewModel.openTrading()
                     }
                 },
             )
@@ -1047,6 +1062,17 @@ private fun AetherAppContent(
                             isSending = isCurrentSessionRunning,
                         )
                     }
+
+                    AppScreen.Trading -> TradingScreen(
+                        journalEntries = viewModel.mt5JournalEntries.collectAsStateWithLifecycle().value,
+                        mt5SyncConfig = viewModel.mt5SyncConfig.collectAsStateWithLifecycle().value,
+                        onSaveMt5Config = viewModel::saveMt5SyncConfig,
+                        onRunMt5Sync = viewModel::runMt5Sync,
+                        onExportTradeState = {
+                            tradeStateExportLauncher.launch("trade_state.json")
+                        },
+                        onClose = viewModel::closeTrading,
+                    )
 
                     AppScreen.Settings -> AetherExtensionComponentHost(
                         target = AetherExtensionComponentSettingsScreen,
