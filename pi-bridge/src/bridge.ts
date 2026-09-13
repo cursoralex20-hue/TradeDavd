@@ -1175,7 +1175,13 @@ function buildModels(config: ModelConfig): {
         ...config.custom_headers,
       },
     } as Model<string>;
-    return { models, model, provider, credentialStore, compatibilityFallbackState };
+    return {
+      models,
+      model,
+      provider: effectiveProvider,
+      credentialStore,
+      compatibilityFallbackState,
+    };
   }
 
   const models = createModels();

@@ -198,6 +198,7 @@ class AetherViewModel(
     private var developerAlpineSetupPreviewJob: Job? = null
     private var piExtensionRefreshGeneration: Long = 0
     private var didRefreshAlpineAfterSettingsLoad = false
+    private var didAutoInitializeAlpineOnStartup = false
 
     val uiState: StateFlow<AetherUiState> = _uiState.asStateFlow()
     val transientMessages = _transientMessages.asSharedFlow()
@@ -685,12 +686,22 @@ class AetherViewModel(
                     viewModelScope.launch { syncPiDiscoveredSkills() }
                 }
             } else {
-                _uiState.update {
-                    it.copy(
-                        piCoreSetupState = PiCoreSetupState(
-                            detail = "Initialize Alpine before starting the agent runtime.",
+                val currentSettings = _uiState.value.settings
+                if (
+                    !didAutoInitializeAlpineOnStartup &&
+                        !currentSettings.shouldLaunchOnboarding() &&
+                        !currentSettings.alpineSetupCompleted
+                ) {
+                    didAutoInitializeAlpineOnStartup = true
+                    initializeAlpineRuntime(makeDefault = true)
+                } else {
+                    _uiState.update {
+                        it.copy(
+                            piCoreSetupState = PiCoreSetupState(
+                                detail = "Initialize Alpine before starting the agent runtime.",
+                            )
                         )
-                    )
+                    }
                 }
             }
         }
