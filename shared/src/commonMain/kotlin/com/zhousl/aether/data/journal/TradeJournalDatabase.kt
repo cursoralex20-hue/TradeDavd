@@ -9,7 +9,7 @@ import androidx.room.RoomDatabaseConstructor
     entities = [
         TradeJournalEntryEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = true,
 )
 @ConstructedBy(TradeJournalDatabaseConstructor::class)

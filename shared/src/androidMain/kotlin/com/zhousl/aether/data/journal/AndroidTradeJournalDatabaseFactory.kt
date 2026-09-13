@@ -14,6 +14,7 @@ object AndroidTradeJournalDatabaseFactory {
             TradeJournalDatabase::class.java,
             "tradedavd_journal.db",
         ).setDriver(BundledSQLiteDriver())
+            .fallbackToDestructiveMigration(dropAllTables = false)
             .build()
             .also { instance = it }
     }

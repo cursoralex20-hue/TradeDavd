@@ -19,6 +19,15 @@ interface TradeJournalDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(entry: TradeJournalEntryEntity)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertAll(entries: List<TradeJournalEntryEntity>)
+
+    @Query("DELETE FROM trade_journal_entries WHERE source = :source")
+    suspend fun deleteBySource(source: String)
+
+    @Query("DELETE FROM trade_journal_entries")
+    suspend fun deleteAll()
+
     @Update
     suspend fun update(entry: TradeJournalEntryEntity)
 
