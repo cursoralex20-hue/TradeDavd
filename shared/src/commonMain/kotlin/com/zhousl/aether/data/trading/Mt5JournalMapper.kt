@@ -3,6 +3,7 @@ package com.zhousl.aether.data.trading
 import com.zhousl.aether.data.journal.TradeJournalEntryEntity
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonArray
@@ -206,7 +207,12 @@ object Mt5JournalMapper {
         put("losses", analytics.losses)
         put("winRate", analytics.winRate)
         put("netProfit", analytics.netProfit)
-        put("profitFactor", analytics.profitFactor)
+        val profitFactor = analytics.profitFactor
+        if (profitFactor.isFinite()) {
+            put("profitFactor", profitFactor)
+        } else {
+            put("profitFactor", JsonNull)
+        }
         put("expectancy", analytics.expectancy)
         put("maxDrawdown", analytics.maxDrawdown)
     }

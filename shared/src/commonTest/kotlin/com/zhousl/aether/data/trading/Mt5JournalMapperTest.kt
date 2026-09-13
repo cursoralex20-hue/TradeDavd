@@ -177,6 +177,7 @@ class Mt5JournalMapperTest {
         assertTrue(json.contains("\"openPositions\""), "positions section")
         assertTrue(json.contains("\"journalEntries\""), "journal section")
         assertTrue(json.contains("\"symbol\":\"XAUUSD\""), "symbol present")
+        assertTrue(json.contains("\"profitFactor\":null"), "infinite profit factor serialized as null")
     }
 
     @Test
