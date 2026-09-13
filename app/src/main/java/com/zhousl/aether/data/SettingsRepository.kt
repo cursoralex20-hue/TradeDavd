@@ -63,6 +63,22 @@ class SettingsRepository(
         }
     }
 
+    fun mt5SyncConfigJson(): Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[MT5_SYNC_CONFIG_JSON].orEmpty()
+    }
+
+    suspend fun saveMt5SyncConfigJson(json: String) {
+        context.dataStore.edit { preferences ->
+            preferences[MT5_SYNC_CONFIG_JSON] = json
+        }
+    }
+
+    suspend fun clearMt5SyncConfig() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(MT5_SYNC_CONFIG_JSON)
+        }
+    }
+
     suspend fun repairBuiltInSkillSelectionDefaults() {
         context.dataStore.edit { preferences ->
             if (preferences[BUILT_IN_SKILL_SELECTION_REPAIRED] == true) return@edit
@@ -703,6 +719,7 @@ class SettingsRepository(
         val ONBOARDING_COMPLETED_VERSION = intPreferencesKey("onboarding_completed_version")
         val PRIVACY_POLICY_ACCEPTED = booleanPreferencesKey("privacy_policy_accepted")
         val LAST_UPDATE_CHECK_AT_MILLIS = longPreferencesKey("last_update_check_at_millis")
+        val MT5_SYNC_CONFIG_JSON = stringPreferencesKey("mt5_sync_config_json")
     }
 }
 

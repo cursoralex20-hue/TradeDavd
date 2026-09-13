@@ -113,6 +113,15 @@ class AetherAppRuntime(
     val chatRepository = ChatRepository(application)
     val extensionsRepository = AgentExtensionsRepository(application)
     val scheduledTaskRepository = ScheduledTaskRepository(application)
+    val tradeJournalDatabase = com.zhousl.aether.data.journal.AndroidTradeJournalDatabaseFactory
+        .getInstance(application)
+    val tradeJournalReadStore = com.zhousl.aether.data.journal.RoomTradeJournalReadStore(tradeJournalDatabase)
+    val mt5SyncManager = com.zhousl.aether.data.trading.Mt5SyncManager(
+        context = application,
+        settingsRepository = settingsRepository,
+        journalDao = tradeJournalDatabase.tradeJournalDao(),
+        journalReadStore = tradeJournalReadStore,
+    )
     val bashTool = TermuxBashTool(
         context = application,
         diagnosticLogger = diagnosticLogger,
