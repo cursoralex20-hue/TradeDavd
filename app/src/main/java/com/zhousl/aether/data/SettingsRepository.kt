@@ -223,7 +223,8 @@ class SettingsRepository(
             val hasLegacySingleProvider = prefs[PROVIDER] != null ||
                 prefs[API_KEY]?.isNotBlank() == true ||
                 prefs[BASE_URL]?.isNotBlank() == true ||
-                prefs[MODEL_ID]?.isNotBlank() == true
+                prefs[MODEL_ID]?.isNotBlank() == true ||
+                (definition.supportsKeylessSession && parsedConfigs.isEmpty())
             if (matchingConfig == null && hasLegacySingleProvider) {
                 val baseProviderId = definition.id.sanitizeProviderId()
                     .ifBlank { "provider" }
