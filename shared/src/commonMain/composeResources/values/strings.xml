@@ -188,7 +188,6 @@
 
     <!-- Settings -->
     <string name="settings_title">Configuración</string>
-    <string name="trading_title">Trading</string>
     <string name="settings_general">Configuración general</string>
     <string name="settings_language">Idioma</string>
     <string name="settings_language_description">Elige el idioma de la app.</string>

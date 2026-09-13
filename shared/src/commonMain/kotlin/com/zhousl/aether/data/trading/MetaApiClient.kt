@@ -22,7 +22,9 @@ class MetaApiClient(
     private val client = createClient(this.engine)
 
     suspend fun getAccountInformation(accountId: String): Result<MetaApiAccountInformation> =
-        safeGet("/users/current/accounts/$accountId/accountInformation", accountId)
+        safeGet("/users/current/accounts/$accountId/accountInformation", accountId).map { response ->
+            Json.decodeFromString<MetaApiAccountInformation>(String(response, Charsets.UTF_8))
+        }
 
     suspend fun getPositions(accountId: String): Result<List<MetaApiPosition>> =
         safeGet("/users/current/accounts/$accountId/positions", accountId).map { response ->

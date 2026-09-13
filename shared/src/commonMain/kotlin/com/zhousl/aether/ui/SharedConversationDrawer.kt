@@ -255,7 +255,7 @@ fun AetherConversationDrawer(
                             if (onTradingSelected != null) {
                                 HeaderCircleButton(
                                     icon = LucideIcons.ChartNoAxesColumn,
-                                    contentDescription = stringResource(Res.string.trading_title),
+                                    contentDescription = "Trading",
                                     onClick = {
                                         dismissSearch()
                                         onTradingSelected()
